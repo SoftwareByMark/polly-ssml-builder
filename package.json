@@ -1,0 +1,38 @@
+{
+  "name": "polly-ssml-builder",
+  "version": "1.0.0",
+  "description": "A utility for building valid SSML for Amazon Web Services Polly & Lex Services",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SoftwareByMark/polly-ssml-builder.git"
+  },
+  "keywords": [
+    "ssml",
+    "amazon",
+    "web",
+    "services",
+    "builder",
+    "polly",
+    "lex"
+  ],
+  "author": {
+    "name": "Software By Mark",
+    "email": "softwarebymark@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/SoftwareByMark/polly-ssml-builder/issues"
+  },
+  "homepage": "https://github.com/SoftwareByMark/polly-ssml-builder#readme",
+  "dependencies": {
+    "lodash.isstring": "^4.0.1",
+    "string-builder": "^0.1.4"
+  },
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  }
+}
