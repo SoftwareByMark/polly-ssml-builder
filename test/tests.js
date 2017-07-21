@@ -13,13 +13,13 @@
 // limitations under the License.
 
 const assert = require('assert');
-const SsmlBuilder = require('../lib/polly-ssml-builder');
+const PollySsmlBuilder = require('../lib/polly-ssml-builder');
 
 describe('SSML Builder', function() {
 
     describe('With no output', function () {
         it('should just contain the start and end tags', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             const result = ssmlBuilder.build();
             const expectedResult= "<speak></speak>";
             assert.equal(result, expectedResult);
@@ -28,7 +28,7 @@ describe('SSML Builder', function() {
 
     describe('Say', function () {
         it('should output text', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Hello there!");
             const result = ssmlBuilder.build();
             const expectedResult= "<speak>Hello there!</speak>";
@@ -38,9 +38,9 @@ describe('SSML Builder', function() {
 
     describe('Delay with strength', function () {
         it('should output strength tag', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Legend")
-            .addBreak(SsmlBuilder.BREAK_STRONG)
+            .addBreak(ssmlBuilder.BREAK_STRONG)
             .speak("dary");
             const result = ssmlBuilder.build();
             const expectedResult= '<speak>Legend<break strength="strong"/>dary</speak>';
@@ -50,7 +50,7 @@ describe('SSML Builder', function() {
 
     describe('Delay with time in milliseconds', function () {
         it('should output time tag', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Legend")
             .addBreak('10ms')
             .speak("dary");
@@ -62,7 +62,7 @@ describe('SSML Builder', function() {
 
     describe('Delay with time in seconds', function () {
         it('should output time tag', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Legend")
             .addBreak('10s')
             .speak("dary");
@@ -74,7 +74,7 @@ describe('SSML Builder', function() {
 
     describe('Delay with invalid String duration', function () {
         it('should throw TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.addBreak("kdkd")
             }, TypeError);
@@ -83,16 +83,16 @@ describe('SSML Builder', function() {
 
     describe('Delay with number duration', function () {
         it('should throw TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.addBreak(10)
             }, TypeError);
         });
     });
 
-    describe('Say with language', function () {
+    describe('Speak with language', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithLanguage("Bonjour!", "fr-FR");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><lang xml:lang="fr-FR">Bonjour!</lang></speak>';
@@ -102,7 +102,7 @@ describe('SSML Builder', function() {
 
     describe('Starting a language twice', function () {
         it('should throw an Error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startLanguage("fr-FR");
             assert.throws(function () {
                 ssmlBuilder.startLanguage("fr-FR");
@@ -112,7 +112,7 @@ describe('SSML Builder', function() {
 
     describe('Building without ending the language', function () {
         it('should throw an Error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startLanguage("fr-FR");
             assert.throws(function () {
                 ssmlBuilder.build();
@@ -122,7 +122,7 @@ describe('SSML Builder', function() {
 
     describe('Mark', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Where will the")
             .mark("mark")
             .speak("be located?");
@@ -132,9 +132,9 @@ describe('SSML Builder', function() {
         });
     });
 
-    describe('Say with paragraph', function () {
+    describe('Speak with paragraph', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithParagraph("This speech will be wrapped in a paragraph");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><p>This speech will be wrapped in a paragraph</p></speak>';
@@ -144,7 +144,7 @@ describe('SSML Builder', function() {
 
     describe('Starting a paragraph twice', function () {
         it('should throw an Error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startParagraph();
             assert.throws(function () {
                 ssmlBuilder.startParagraph();
@@ -154,7 +154,7 @@ describe('SSML Builder', function() {
 
     describe('Building without ending paragraph', function () {
         it('should throw an Error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startParagraph();
             assert.throws(function () {
                 ssmlBuilder.build();
@@ -164,11 +164,11 @@ describe('SSML Builder', function() {
 
     describe('Say phonetically', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("You say, ")
-            .speakPhonetically("pecan", SsmlBuilder.ALPHABET_IPA, "pɪˈkɑːn")
+            .speakPhonetically("pecan", ssmlBuilder.ALPHABET_IPA, "pɪˈkɑːn")
             .speak(". I say, ")
-            .speakPhonetically("pecan", SsmlBuilder.ALPHABET_IPA, "ˈpi.kæn")
+            .speakPhonetically("pecan", ssmlBuilder.ALPHABET_IPA, "ˈpi.kæn")
             .speak(".");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak>You say, <phoneme alphabet="ipa" ph="pɪˈkɑːn">pecan</phoneme>. I say, <phoneme alphabet="ipa" ph="ˈpi.kæn">pecan</phoneme>.</speak>';
@@ -178,35 +178,35 @@ describe('SSML Builder', function() {
 
     describe('Say phonetically with invalid alphabet', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function (){
                 ssmlBuilder.speakPhonetically("pecan", "foo", "pɪˈkɑːn");
             }, TypeError);
         });
     });
 
-    describe('Say with volume constant', function () {
+    describe('Speak with volume constant', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
-            ssmlBuilder.speakWithVolume("Speak this quite a bit louder.", SsmlBuilder.VOLUME_XTRA_LOUD);
+            const ssmlBuilder = new PollySsmlBuilder();
+            ssmlBuilder.speakWithVolume("Speak this quite a bit louder.", ssmlBuilder.VOLUME_XTRA_LOUD);
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody volume="x-loud">Speak this quite a bit louder.</prosody></speak>';
             assert.equal(result, expectedResult);
         });
     });
 
-    describe('Say with invalid volume constant', function () {
+    describe('Speak with invalid volume constant', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.speakWithVolume("Speak this quite a bit louder.", "foo");
             }, TypeError);
         });
     });
 
-    describe('Say with volume decibel', function () {
+    describe('Speak with volume decibel', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithVolume("Speak this quite a bit louder.", "+3dB");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody volume="+3dB">Speak this quite a bit louder.</prosody></speak>';
@@ -214,37 +214,37 @@ describe('SSML Builder', function() {
         });
     });
 
-    describe('Say with invalid volume decibel', function () {
+    describe('Speak with invalid volume decibel', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.speakWithVolume("Speak this quite a bit louder.", "+3DB");
             }, TypeError);
         });
     });
 
-    describe('Say with pitch constant', function () {
+    describe('Speak with pitch constant', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
-            ssmlBuilder.speakWithPitch("Speak this quite a bit lower.", SsmlBuilder.PITCH_XTRA_LOW);
+            const ssmlBuilder = new PollySsmlBuilder();
+            ssmlBuilder.speakWithPitch("Speak this quite a bit lower.", ssmlBuilder.PITCH_XTRA_LOW);
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody pitch="x-low">Speak this quite a bit lower.</prosody></speak>';
             assert.equal(result, expectedResult);
         });
     });
 
-    describe('Say with invalid pitch constant', function () {
+    describe('Speak with invalid pitch constant', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.speakWithPitch("Speak this quite a bit lower.", "foo");
             }, TypeError);
         });
     });
 
-    describe('Say with pitch percent', function () {
+    describe('Speak with pitch percent', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithPitch("Speak this quite a bit lower.", "-7%");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody pitch="-7%">Speak this quite a bit lower.</prosody></speak>';
@@ -252,28 +252,28 @@ describe('SSML Builder', function() {
         });
     });
 
-    describe('Say with invalid pitch percent', function () {
+    describe('Speak with invalid pitch percent', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function() {
                 ssmlBuilder.speakWithPitch("Speak this quite a bit lower.", "-7");
             }, TypeError);
         });
     });
 
-    describe('Say with rate constant', function () {
+    describe('Speak with rate constant', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
-            ssmlBuilder.speakWithRate("Speak this quite a bit quicker.", SsmlBuilder.RATE_FAST);
+            const ssmlBuilder = new PollySsmlBuilder();
+            ssmlBuilder.speakWithRate("Speak this quite a bit quicker.", ssmlBuilder.RATE_FAST);
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody rate="fast">Speak this quite a bit quicker.</prosody></speak>';
             assert.equal(result, expectedResult);
         });
     });
 
-    describe('Say with rate string', function () {
+    describe('Speak with rate string', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithRate("Speak this quite a bit quicker.", "fast");
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody rate="fast">Speak this quite a bit quicker.</prosody></speak>';
@@ -281,28 +281,28 @@ describe('SSML Builder', function() {
         });
     });
 
-    describe('Say with invalid rate constant', function () {
+    describe('Speak with invalid rate constant', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
                 ssmlBuilder.speakWithRate("Speak this quite a bit quicker.", "foo");
             }, TypeError);
         });
     });
 
-    describe('Say with Prosody', function () {
+    describe('Speak with Prosody', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
-            ssmlBuilder.speakWithProsody("Say this is a wierd voice.", SsmlBuilder.VOLUME_XTRA_SOFT, SsmlBuilder.PITCH_LOW, SsmlBuilder.RATE_XTRA_SLOW);
+            const ssmlBuilder = new PollySsmlBuilder();
+            ssmlBuilder.speakWithProsody("Say this is a wierd voice.", ssmlBuilder.VOLUME_XTRA_SOFT, ssmlBuilder.PITCH_LOW, ssmlBuilder.RATE_XTRA_SLOW);
             const result = ssmlBuilder.build();
             const expectedResult = '<speak><prosody volume="x-soft" pitch="low" rate="x-slow">Say this is a wierd voice.</prosody></speak>';
             assert.equal(result, expectedResult);
         });
     });
 
-    describe('Say with Prosody and no options', function () {
+    describe('Speak with Prosody and no options', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
                 ssmlBuilder.speakWithProsody("Invalid.", null, null, null);
             }, TypeError);
@@ -311,7 +311,7 @@ describe('SSML Builder', function() {
 
     describe('Speak as sentence', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speakWithSentence("Mary had a little lamb")
                 .speakWithSentence("Whose fleece was white as snow")
                 .speak("And everywhere that Mary went, the lamb was sure to go.");
@@ -323,7 +323,7 @@ describe('SSML Builder', function() {
 
     describe('Start a sentence twice', function () {
         it('should throw an error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startSentence();
             assert.throws(function () {
                 ssmlBuilder.startSentence();
@@ -333,7 +333,7 @@ describe('SSML Builder', function() {
 
     describe('Building without ending sentence', function () {
         it('should throw an error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startSentence();
             assert.throws(function () {
                 ssmlBuilder.build();
@@ -343,9 +343,9 @@ describe('SSML Builder', function() {
 
     describe('Speak as with type constant', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Richard's number is ")
-            .speakAs("2122241555", SsmlBuilder.INTERPRET_AS_TELEPHONE);
+            .speakAs("2122241555", ssmlBuilder.INTERPRET_AS_TELEPHONE);
             const result = ssmlBuilder.build();
             const expectedResult = "<speak>Richard's number is <say-as interpret-as=\"telephone\">2122241555</say-as></speak>";
             assert.equal(result, expectedResult);
@@ -354,7 +354,7 @@ describe('SSML Builder', function() {
 
     describe('Speak as with invliad type constant', function () {
         it('should throw a Type Error', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
                 ssmlBuilder.speakAs("2122241555", "foo");
             }, TypeError);
@@ -363,7 +363,7 @@ describe('SSML Builder', function() {
 
     describe('Speak as with type string', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("My postcode is ")
             .speakAs("1234", "digits");
             const result = ssmlBuilder.build();
@@ -374,18 +374,27 @@ describe('SSML Builder', function() {
 
     describe('Speak as Date without format', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
-                ssmlBuilder.speakAs("20170622", SsmlBuilder.INTERPRET_AS_DATE);
+                ssmlBuilder.speakAs("20170622", ssmlBuilder.INTERPRET_AS_DATE);
+            }, TypeError);
+        });
+    });
+
+    describe('Speak as Date with invalid format', function () {
+        it('should throw a TypeError', function () {
+            const ssmlBuilder = new PollySsmlBuilder();
+            assert.throws(function () {
+                ssmlBuilder.speakAs("20170622", "foo");
             }, TypeError);
         });
     });
 
     describe('Speak as Date', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("Today is ")
-            .speakAs("20170622", SsmlBuilder.INTERPRET_AS_DATE, SsmlBuilder.DATE_YYYYMMDD);
+            .speakAs("20170622", ssmlBuilder.INTERPRET_AS_DATE, ssmlBuilder.DATE_YYYYMMDD);
             const result = ssmlBuilder.build();
             const expectedResult = "<speak>Today is <say-as interpret-as=\"date\" format=\"yyyymmdd\">20170622</say-as></speak>";
             assert.equal(result, expectedResult);
@@ -394,7 +403,7 @@ describe('SSML Builder', function() {
 
     describe('Speak with substitute', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("My favorite chemical element is ")
             .speakWithSubstitute("Hg", "mercury")
             .speak(", it looks cool.");
@@ -406,11 +415,11 @@ describe('SSML Builder', function() {
 
     describe('Speak as role', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("The present simple form of the word is pronounced ")
-            .speakWithRole("read", SsmlBuilder.ROLE_VERB)
+            .speakWithRole("read", ssmlBuilder.ROLE_VERB)
             .speak(", where the past tense or past participle is pronounced ")
-            .speakWithRole("read", SsmlBuilder.ROLE_PAST_TENSE);
+            .speakWithRole("read", ssmlBuilder.ROLE_PAST_TENSE);
             const result = ssmlBuilder.build();
             const expectedResult = "<speak>" +
                 "The present simple form of the word is pronounced <w role=\"amazon:VB\">read</w>, " +
@@ -422,7 +431,7 @@ describe('SSML Builder', function() {
 
     describe('Speak as invalid role', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
                 ssmlBuilder.speakWithRole("read", "past");
             }, TypeError);
@@ -431,11 +440,11 @@ describe('SSML Builder', function() {
 
     describe('Speak as role', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.speak("The present simple form of the word is pronounced ")
-            .speakWithRole("read", SsmlBuilder.ROLE_VERB)
+            .speakWithRole("read", ssmlBuilder.ROLE_VERB)
             .speak(", where the past tense or past participle is pronounced ")
-            .speakWithRole("read", SsmlBuilder.ROLE_PAST_TENSE);
+            .speakWithRole("read", ssmlBuilder.ROLE_PAST_TENSE);
             const result = ssmlBuilder.build();
             const expectedResult = "<speak>" +
                 "The present simple form of the word is pronounced <w role=\"amazon:VB\">read</w>, " +
@@ -448,7 +457,7 @@ describe('SSML Builder', function() {
 
     describe('Whisper', function () {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.whisper("If you make any noise, ")
             .speak("she said, ")
             .whisper("they will hear us.");
@@ -464,7 +473,7 @@ describe('SSML Builder', function() {
 
     describe('Speak with invalid effect', function () {
         it('should throw a TypeError', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             assert.throws(function () {
                 ssmlBuilder.speakWithEffect("Boo!", "foo");
             }, TypeError);
@@ -474,10 +483,10 @@ describe('SSML Builder', function() {
 
     describe('Complex example', function() {
         it('should properly format the SSML', function () {
-            const ssmlBuilder = new SsmlBuilder();
+            const ssmlBuilder = new PollySsmlBuilder();
             ssmlBuilder.startParagraph()
                 .startSentence()
-                .speakWithRate("Some say", SsmlBuilder.RATE_XTRA_FAST)
+                .speakWithRate("Some say", ssmlBuilder.RATE_XTRA_FAST)
                 .addBreak("200ms")
                 .speak("the world will end in fire")
                 .addBreak("500ms")
@@ -486,7 +495,7 @@ describe('SSML Builder', function() {
                 .endParagraph()
                 .startParagraph()
                 .startSentence()
-                .speakWithRate("From what", SsmlBuilder.RATE_XTRA_FAST)
+                .speakWithRate("From what", ssmlBuilder.RATE_XTRA_FAST)
                 .addBreak("200ms")
                 .speak("I've tasted of desire")
                 .addBreak("1s")

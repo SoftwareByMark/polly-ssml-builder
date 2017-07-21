@@ -1,6 +1,6 @@
 {
   "name": "polly-ssml-builder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility for building valid SSML for Amazon Web Services Polly & Lex Services",
   "main": "index.js",
   "scripts": {

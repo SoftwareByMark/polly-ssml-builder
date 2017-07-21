@@ -4,7 +4,7 @@ A utility for building valid SSML for use with Amazon Web Services [Lex](https:/
 
 Amazon Lex & Polly support a subset of the SSML markup tags as defined by [Speech Synthesis Markup Language (SSML) Version 1.1, W3C Recommendation](https://www.w3.org/TR/2010/REC-speech-synthesis11-20100907/).
 
-Using a [Builder Pattern](https://en.wikipedia.org/wiki/Builder_pattern), the SsmlBuilder class allows you to programmatically build up a valid SSML string.
+Using a [Builder Pattern](https://en.wikipedia.org/wiki/Builder_pattern), PollySsmlBuilder allows you to programmatically build up a valid SSML string.
 
 
 ## Install
@@ -18,18 +18,18 @@ npm install polly-ssml-builder
 Start by requiring the library.
 
 ```javascript
-const SsmlBuilder = require("polly-ssml-builder");
+const PollySsmlBuilder = require("polly-ssml-builder");
 ```
 
 Then, for each SSML String you want to create, do the following:
 
-* create a new SsmlBuilder
+* create a new PollySsmlBuilder
 * call methods to speak text
 * build the String result
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speak("Don't tell anyone, but ")
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speak("Don't tell anyone, but ")
     .whisper("I see dead people.")
     .build();
 ```
@@ -40,29 +40,29 @@ This produces the following String:
 <speak>Don't tell anyone, but <amazon:effect name="whispered">I see dead people.</amazon:effect></speak>
 ```
 
-All options are available as constants on the SsmlBuilder class.  For example:
+All options are available as constants on the PollySsmlBuilder class.  For example:
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speakPhonetically("pecan", SsmlBuilder.ALPHABET_IPA, "pɪˈkɑːn")
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speakPhonetically("pecan", pollySsmlBuilder.ALPHABET_IPA, "pɪˈkɑːn")
     .build();
 ```
 
-SsmlBuilder.ALPHABET_IPA specifies the "ipa" language.
+PollySsmlBuilder.ALPHABET_IPA specifies the "ipa" language.
 
 ### Break
 
 To add a break (pause) into the speech, call addBreak().
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speak("Legen - wait for it.")
-    .addBreak(SsmlBuilder.BREAK_STRONG)
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speak("Legen - wait for it.")
+    .addBreak(pollySsmlBuilder.BREAK_STRONG)
     .speak("dary")
     .build();
 ```
 
-The duration parameter can be on of the following:
+The duration parameter can be one of the following:
 
 * The number of seconds specified as "10s" for 10 seconds 
 * The number of milliseconds specified as "500ms" for 500 milliseconds
@@ -73,12 +73,12 @@ The duration parameter can be on of the following:
 To change the volume of speech, call speakWithVolume().
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speakWithVolume("I'm shouting!", SsmlBuilder.VOLUME_XTRA_LOUD)
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speakWithVolume("I'm shouting!", pollySsmlBuilder.VOLUME_XTRA_LOUD)
     .build();
 ```
 
-The volume parameter can be on of the following:
+The volume parameter can be one of the following:
 
 * An increase in volume as "+5dB" will increase the volume by 5 decibels
 * A decrease in volume as "-3dB" will decrease the volume by 3 decibels
@@ -89,12 +89,12 @@ The volume parameter can be on of the following:
 To change the pitch of speech, call speakWithPitch().
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speakWithPitch("I'm speaking with a high voice!", SsmlBuilder.PITCH_HIGH)
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speakWithPitch("I'm speaking with a high voice!", pollySsmlBuilder.PITCH_HIGH)
     .build();
 ```
 
-The pitch parameter can be on of the following:
+The pitch parameter can be one of the following:
 
 * A percent increase in pitch as "+7%" will increase the pitch by 7 percent
 * A percent decrease in pitch as "-5%" will decrease the pitch by 5 percent
@@ -105,16 +105,16 @@ The pitch parameter can be on of the following:
 Paragraphs can be spoken with one method call:
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.speakWithParagraph("The quick brown fox jumped over the lazy dog.  It is a sentence that contains all the letters of the alphabet.")
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.speakWithParagraph("The quick brown fox jumped over the lazy dog.  It is a sentence that contains all the letters of the alphabet.")
     .build();
 ```
 
 Or with multiple methods calls:
 
 ```javascript
-let replyBuilder = new SsmlBuilder();
-let ssml = replyBuilder.startParagraph()
+let pollySsmlBuilder = new PollySsmlBuilder();
+let ssml = pollySsmlBuilder.startParagraph()
     .speak("The quick brown fox jumped over the lazy dog.  ")
     .speak("It is a sentence that contains all the letters of the alphabet.")
     .endParagraph()
@@ -152,3 +152,12 @@ All tags listed as of July 2017 are supported by this builder.
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE.txt](LICENSE.txt) file for details
 
+## Change History
+
+Release 1.0.0
+* initial release
+
+Release 1.0.1
+* refactoring to provide extensibility
+* renamed SsmlBuilder to PollySsmlBuilder
+* fixed spelling in Readme
